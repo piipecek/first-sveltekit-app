@@ -2,10 +2,13 @@
     export let text = null;
     export let href = null;
     export let is_logout = false;
+    import { addMessage } from '$lib/stores/messages.js';
+    import { purgeRoles} from '$lib/stores/roles.js';
     
     function logout() {
         localStorage.removeItem("access_token")
-        alert("You have been logged out.")
+        purgeRoles()
+        addMessage("success", "Odhlášení proběhlo úspěšně.")
     }
 
 </script>

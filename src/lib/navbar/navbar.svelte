@@ -2,15 +2,15 @@
     import NavbarItem from "$lib/navbar/navbar-item.svelte"
     import { onMount } from "svelte"
     import { PUBLIC_API_URL } from "$env/static/public"
+    import { roles, setRoles, purgeRoles } from "$lib/stores/roles.js"
 
-
-
-    let roles = [];
+    let _roles = []
+    let roles_loaded = false
 
     async function get_roles() { // tohle je jen convinience funkce, která upravuje vzhled navbaru. Opravdová autentizace se děje v backendu při requestu endpoint-specific informací.
         let access_token = localStorage.getItem("access_token")
         if (!access_token) {
-            roles = []
+            purgeRoles()
             return
         } else {
             let response = await fetch(PUBLIC_API_URL + "/auth/roles", {
@@ -23,28 +23,38 @@
             
             if (response.ok) {
                 let data = await response.json()
-                roles = data.roles
+                setRoles(data.roles)
             } else {
                 localStorage.removeItem("access_token")
-                roles = []
+                purgeRoles()
             }
             
         }
     }
 
     onMount(() => {
-        get_roles()
+        get_roles().then(() => {
+            roles.subscribe(value => {
+                _roles = value
+            })
+            roles_loaded = true
+        })
     })
+
 </script>
 
 <div class="navbar">
-    <NavbarItem text="Domů" href="/"/>
-    {#if roles.length === 0}
-        <NavbarItem text="Login" href="/login"/>
-        <NavbarItem text="Register" href="/register"/>
+    {#if roles_loaded}
+        <NavbarItem text="Domů" href="/"/>
+        {#if _roles.length === 0}
+            <NavbarItem text="Login" href="/login"/>
+            <NavbarItem text="Register" href="/register"/>
+        {:else}
+            <NavbarItem text="Účet" href="/account"/>
+            <NavbarItem is_logout={true}/>
+        {/if}
     {:else}
-        <NavbarItem text="Účet" href="/account"/>
-        <NavbarItem is_logout={true}/>
+        <NavbarItem text="Loading..."/>
     {/if}
 </div>
 

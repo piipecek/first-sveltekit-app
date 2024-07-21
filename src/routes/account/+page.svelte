@@ -1,8 +1,9 @@
 <script>
     import H1 from "$lib/h1.svelte"; 
-    import Navbar from "$lib/navbar/navbar.svelte";
     import { goto } from '$app/navigation';
     import { PUBLIC_API_URL } from "$env/static/public"
+    import { addMessage } from '$lib/stores/messages.js';
+
     
 
     let users = async () => {
@@ -18,13 +19,12 @@
             let data = await response.json()
             return data
         } else {
-            alert("You are not authorized to view this page.")
+            addMessage("error", "Nepodařilo se načíst data.")
             goto("/login")
         }
     }
 </script>
 
-<Navbar/>
 <H1 text="Účet"/>
 {#await users()}
     <p>Loading...</p>
@@ -35,3 +35,5 @@
 {:catch error}
     <p>{error}</p>
 {/await}
+
+<button on:click={() => {addMessage("success", "Test")}}>Přidat message</button>

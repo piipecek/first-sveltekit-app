@@ -1,7 +1,9 @@
 <script>
-    import Navbar from '$lib/navbar/navbar.svelte';
     import H1 from "$lib/h1.svelte"
     import { PUBLIC_API_URL } from "$env/static/public"
+    import { addMessage } from '$lib/stores/messages.js';
+    import { goto } from '$app/navigation';
+
 
     let email = ""
     let password = ""
@@ -21,18 +23,17 @@
         let data = await response.json()
         switch (response.status) {
             case 201: 
-                alert("Nový uživatel zaregistrován. Můžete se nyní přihlásit.")
+                addMessage("success", "Registrace proběhla úspěšně. Můžete se nyní přihlásit.")
+                goto("/login")
                 break
             case 409:
-                alert("Tento e-mail už je zaregistrovaný.")
+                addMessage("error", "Uživatel s tímto emailem již existuje.")
                 break
             default:
-                alert("Nečekaná chyba, detaily hledej v konzoli.")
+                addMessage("error", "Registrace se nezdařila.")
         }
     }
 </script>
-
-<Navbar/>
 
 <H1 text="Register"/>
 <label for="email">Email:</label>
