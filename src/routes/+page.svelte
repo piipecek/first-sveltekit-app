@@ -1,31 +1,15 @@
 <script>
-    import Title from '$lib/title.svelte';
+    import Navbar from '$lib/navbar/navbar.svelte';
+    import H1 from "$lib/h1.svelte"
 </script>
 
 
-<div class="hlavni">
-    <Title />
-    <h1>Welcome to SvelteKit</h1>
-    <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-</div>
-<ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/about">About</a></li>
-</ul>
-
+<Navbar/>
+<H1 text="Domovská stránka"/>
+<p>
+    Tento projekt se připojuje k testovací flask-restx databázi a zkouší auth pomocí JWT.
+</p>
 
 <style>
-    .hlavni {
-        margin: 2rem;
-        font: 1rem sans-serif;
-    }
-    h1 {
-        color: #999;
-    }
-    p {
-        color: blue;
-    }
-    a {
-        color: red;
-    }
+    
 </style>
